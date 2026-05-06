@@ -10,6 +10,9 @@ asyncpg = "*"
 alembic = "*"
 greenlet = "*"
 psycopg2-binary = "*"
+detoxify = "*"
+torch = "*"
+redis = "*"
 
 [dev-packages]
 

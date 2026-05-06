@@ -1,8 +1,11 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
+import redis.asyncio as redis
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+redis_client = redis.from_url("redis://localhost:6379/0", decode_responses=True)
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = sessionmaker(engine,class_=AsyncSession,expire_on_commit=False)
