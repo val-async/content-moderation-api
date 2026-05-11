@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: mod_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: mod_redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    container_name: mod_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      # mapping the AI cache to a permanent volume
+      - torch_cache:/root/.cache/torch
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL_AlEMBIC=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+  torch_cache:  # This creates a permanent storage space for the AI weights

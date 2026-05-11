@@ -1,0 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.11.0
+detoxify==0.5.2
+transformers==5.8.0
+numpy==2.4.4
